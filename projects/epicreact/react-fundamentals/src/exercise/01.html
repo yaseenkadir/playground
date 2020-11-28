@@ -14,3 +14,33 @@
 <!-- 🐨 Append the div to the root div using `append` -->
 <!--   💰 document.getElementById('root') -->
 <!--   📜 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append -->
+<html>
+<body>
+
+<!-- Before extra credit -->
+<!--<div id="root">-->
+<!--  <script>-->
+<!--    const contentDiv = document.createElement('div')-->
+<!--    contentDiv.textContent = 'Hello World'-->
+<!--    contentDiv.className = 'container'-->
+<!--    const rootDiv = document.getElementById('root')-->
+<!--    rootDiv.append(contentDiv)-->
+<!--  </script>-->
+<!--</div>-->
+
+<!-- With extra credit -->
+<script>
+  const rootDiv = document.createElement('div')
+  rootDiv.setAttribute('id', 'root')
+  // The suggested solution uses `document.body` which I should have used.
+  // I also forgot to set the the `id` tag.
+  const body = document.getElementsByTagName('body').item(0)
+  body.append(rootDiv)
+  const contentDiv = document.createElement('div')
+  contentDiv.textContent = 'Hello World'
+  contentDiv.className = 'container'
+  rootDiv.append(contentDiv)
+</script>
+
+</body>
+</html>
