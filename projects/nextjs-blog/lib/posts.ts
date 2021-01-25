@@ -6,6 +6,16 @@ import html from 'remark-html'
 
 const postsDirectory = path.join(process.cwd(), 'posts')
 
+export type Post = {
+  id: string,
+  title: string,
+  date: string,
+}
+
+export type PostWithContent = Post & {
+  contentHtml: string
+}
+
 export function getSortedPostsData() {
   // Get file names under /posts
   const fileNames = fs.readdirSync(postsDirectory)
@@ -21,19 +31,25 @@ export function getSortedPostsData() {
     const matterResult = matter(fileContents)
 
     // Combine the data with the id
-    return {
-      id,
-      ...matterResult.data
-    }
+    return matterResultToPost({id, matterData: matterResult.data})
   })
   // Sort posts by date
   return allPostsData.sort((a, b) => {
+    // Because the date is in 'YYYY-mm-dd' format it is lexicographically ordered
     if (a.date < b.date) {
       return 1
     } else {
       return -1
     }
   })
+}
+
+function matterResultToPost({id, matterData}: { id: string, matterData: any }): Post {
+  return {
+    id,
+    title: matterData.title,
+    date: matterData.date,
+  }
 }
 
 export function getAllPostIds() {
@@ -61,7 +77,7 @@ export function getAllPostIds() {
   })
 }
 
-export async function getPostData(id) {
+export async function getPostData(id: string): Promise<PostWithContent> {
   const fullPath = path.join(postsDirectory, `${id}.md`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
 
@@ -76,9 +92,8 @@ export async function getPostData(id) {
 
   // Combine the data with the id
   return {
-    id,
-    contentHtml,
-    ...matterResult.data
+    ...matterResultToPost({id, matterData: matterResult.data}),
+    contentHtml
   }
 }
 
